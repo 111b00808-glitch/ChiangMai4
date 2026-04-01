@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清邁五天四夜慢活之旅 - 泰北蘭納風情</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Noto+Sans+Thai:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', 'Noto Sans Thai', sans-serif;
+            background-color: #fffcf9;
+            color: #4a4a4a;
+            scroll-behavior: smooth;
+        }
+
+        /* 網頁背景大圖 Hero Section */
+        .hero-section {
+            position: relative;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #e5e7eb;
+        }
+
+        #hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* 預設背景大圖：清邁佛寺景色 */
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3), #fffcf9), 
+                              url('https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero-title { font-size: 6rem; }
+        }
+
+        /* 導航標籤 */
+        .day-tab {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .day-tab.active {
+            background-color: #d97706;
+            color: white;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+        }
+
+        /* 行程卡片 */
+        .itinerary-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 1.5rem;
+            border: 1px solid #f3f4f6;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .itinerary-card { flex-direction: row; }
+        }
+
+        .card-img-container {
+            flex-shrink: 0;
+            width: 100%;
+            height: 200px;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .card-img-container { width: 280px; height: 180px; }
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .map-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.25rem;
+            background-color: #fff7ed;
+            color: #c2410c;
+            border: 1px solid #ffedd5;
+            border-radius: 99px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景大圖區 -->
+    <header class="hero-section">
+        <div id="hero-bg"></div>
+        <div class="hero-content px-6">
+            <h1 class="hero-title">Chiang Mai</h1>
+            <p id="hero-subtitle" class="text-white text-xl md:text-2xl font-medium tracking-widest uppercase">清邁 · 五天四夜慢活之旅</p>
+        </div>
+    </header>
+
+    <!-- 天數切換 -->
+    <div class="max-w-4xl mx-auto -mt-10 px-6 relative z-20">
+        <nav class="bg-white shadow-xl rounded-2xl p-2 flex overflow-x-auto">
+            <div onclick="showDay(1)" id="tab1" class="day-tab active flex-1 py-3 px-4 rounded-xl font-bold">D1</div>
+            <div onclick="showDay(2)" id="tab2" class="day-tab flex-1 py-3 px-4 rounded-xl font-bold text-gray-400">D2</div>
+            <div onclick="showDay(3)" id="tab3" class="day-tab flex-1 py-3 px-4 rounded-xl font-bold text-gray-400">D3</div>
+            <div onclick="showDay(4)" id="tab4" class="day-tab flex-1 py-3 px-4 rounded-xl font-bold text-gray-400">D4</div>
+            <div onclick="showDay(5)" id="tab5" class="day-tab flex-1 py-3 px-4 rounded-xl font-bold text-gray-400">D5</div>
+        </nav>
+    </div>
+
+    <!-- 行程內容 -->
+    <main class="max-w-4xl mx-auto p-6 mt-12 mb-24">
+        <div id="itinerary-content"></div>
+    </main>
+
+    <script>
+        let currentDay = 1;
+
+        const itineraryData = [
+            {
+                title: "第一天：古城巡禮",
+                items: [
+                    { time: "09:00", name: "契迪龍寺 Wat Chedi Luang", desc: "蘭納式古塔，清邁的地標之一。", img: "https://images.unsplash.com/photo-1596422846543-75c6fc18a5cf?auto=format&fit=crop&w=800&q=80" },
+                    { time: "14:00", name: "塔佩門 Tha Phae Gate", desc: "紅磚城牆，網美拍照聖地。", img: "https://images.unsplash.com/photo-1583259458428-a6642878644e?auto=format&fit=crop&w=800&q=80" }
+                ]
+            },
+            {
+                title: "第二天：山頂佛寺",
+                items: [
+                    { time: "08:30", name: "素帖寺 Doi Suthep", desc: "金色佛塔，可俯瞰整個清邁市區。", img: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80" },
+                    { time: "15:00", name: "尼曼路 One Nimman", desc: "時尚購物區與藝術街頭。", img: "https://images.unsplash.com/photo-1513415277900-a62401e19be4?auto=format&fit=crop&w=800&q=80" }
+                ]
+            },
+            {
+                title: "第三天：大象體驗",
+                items: [
+                    { time: "09:00", name: "大象自然公園 ENP", desc: "友善互動，照顧大象的一天。", img: "https://images.unsplash.com/photo-1585938389612-a552a28d6914?auto=format&fit=crop&w=800&q=80" }
+                ]
+            },
+            {
+                title: "第四天：在地市集",
+                items: [
+                    { time: "10:00", name: "真心市集 Jing Jai Market", desc: "在地文創、手作與有機美食。", img: "https://images.unsplash.com/photo-1505932794465-147d1f1b2c97?auto=format&fit=crop&w=800&q=80" },
+                    { time: "15:00", name: "藝術村 Baan Kang Wat", desc: "森林中的手作聚落。", img: "https://images.unsplash.com/photo-1563292325-084569947963?auto=format&fit=crop&w=800&q=80" }
+                ]
+            },
+            {
+                title: "第五天：採買回程",
+                items: [
+                    { time: "10:00", name: "瓦洛洛市場 Warorot Market", desc: "買伴手禮、品嚐道地小吃的好去處。", img: "https://images.unsplash.com/photo-1543083477-4f7fe0da2cdb?auto=format&fit=crop&w=800&q=80" }
+                ]
+            }
+        ];
+
+        function showDay(num) {
+            currentDay = num;
+            render();
+        }
+
+        function render() {
+            const day = itineraryData[currentDay - 1];
+            const content = document.getElementById('itinerary-content');
+            
+            let html = `<h2 class="text-3xl font-bold mb-8 text-amber-900">${day.title}</h2>`;
+            
+            day.items.forEach(item => {
+                html += `
+                    <div class="itinerary-card">
+                        <div class="card-img-container">
+                            <img src="${item.img}" class="card-img" alt="${item.name}">
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-amber-600 font-bold text-sm mb-1">${item.time}</div>
+                            <h3 class="text-xl font-bold mb-2 text-gray-800">${item.name}</h3>
+                            <p class="text-gray-500 mb-4 text-sm leading-relaxed">${item.desc}</p>
+                            <a href="https://www.google.com/maps/search/${encodeURIComponent(item.name)}" target="_blank" class="map-btn">
+                                <i class="fa-solid fa-location-dot mr-2"></i>查看地圖
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+
+            // 更新標籤樣式
+            document.querySelectorAll('.day-tab').forEach((t, i) => {
+                const isActive = (i + 1) === currentDay;
+                t.classList.toggle('active', isActive);
+                t.classList.toggle('text-gray-400', !isActive);
+            });
+        }
+
+        // 初始化
+        window.onload = render;
+    </script>
+</body>
+</html>
